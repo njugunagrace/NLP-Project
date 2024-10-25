@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-e_5qxs%_d$bl-8n0d3j+gb$mo&6fwv(3fm!eavf&6bpe%uf@ey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['nlp-project-4ciw.onrender.com']
 
 
 # Application definition
