@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'reviews',
 ]
 
-STATIC_URL = '/static/'
+STATIC_URL = '/reviews/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'reviews/static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 MIDDLEWARE = [
