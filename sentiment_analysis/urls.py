@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 
+from django.views.generic.base import RedirectView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('reviews/', include('https://nlp-project-4ciw.onrender.com/reviews.urls')), 
+    path('', RedirectView.as_view(url='/reviews/', permanent=True)),  # Redirect root to /reviews/
+    path('reviews/', include('reviews.urls')),
 ]
 
 
