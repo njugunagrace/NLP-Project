@@ -47,7 +47,7 @@ def predict_sentiment(request):
         processed_review = preprocess_review(user_review)  # Clean and vectorize the review
 
         # Predict sentiment using logistic regression
-        for model_name, model in models.items():
+        for model in models.items():
             predicted_label = model.predict(processed_review)[0]
         # Calculate the confidence level using predict_proba
         try:

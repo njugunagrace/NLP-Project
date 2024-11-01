@@ -1,220 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Review Sentiment Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-   
-    {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentiment Analysis Interface</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    body {
+      background-color: #1e1e1e;
+      background: url("{% static 'images/movie.jpg' %}") no-repeat;
+      background-size: cover;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    .dashboard {
+      display: flex;
+      width: 90%;
+      max-width: 1200px;
+      height: 90vh;
+      background: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 20%;
+      background-color: #333;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      color: #ff6f00;
+      border-right: 1px solid #444;
+      animation: slideIn 0.7s ease-out;
+    }
 
-    <style>
-        /* Fix the background image path and ensure it loads */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: url("{% static 'images/movie.jpg' %}") no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            backdrop-filter: blur(6px);
-            animation: backgroundFade 15s infinite alternate; /* Background fade animation */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+    .sidebar h3 {
+      color: #ff6f00;
+      font-size: 28px;
+      text-align: center;
+    }
 
-        @keyframes backgroundFade {
-            0% {
-                filter: brightness(0.8);
-            }
-            50% {
-                filter: brightness(1);
-            }
-            100% {
-                filter: brightness(0.8);
-            }
-        }
+    .sidebar ul {
+      list-style: none;
+      margin-top: 80px;
+      margin-left: 30px;
 
-        header {
-            background-color: rgba(76, 175, 80, 0.8);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+    }
 
-        h1 {
-            margin: 0;
-            font-size: 28px;
-        }
+    .sidebar ul li {
+      padding: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+      color: #ff6f00;
+      transition: color 0.3s, font-weight 0.3s;
+    }
 
-        .container {
-            width: 80%;
-            max-width: 600px;
-            margin-top: 100px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.9); 
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 1s ease-in-out;
-            backdrop-filter: blur(5px); /* Apply blur to the container for contrast */
-        }
+    .sidebar ul li:hover {
+      color: #ffaa00;
+      font-weight: bold;
+    }
 
-        h2 {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            position: relative;
-        }
+    /* Main Content */
+    .main-content {
+      width: 80%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-        h2::after {
-            content: '';
-            width: 50px;
-            height: 2px;
-            background-color: #4CAF50;
-            display: block;
-            margin: 0 auto;
-            margin-top: 5px;
-        }
+    .main-content h1 {
+      color: #ffffff;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .input-section {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        textarea {
-            width: 100%;
-            /* padding: 15px; */
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            resize: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      resize: none;
+      margin: 10px 0;
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
 
-        textarea:focus {
-            border-color: #4CAF50;
-            outline: none;
-            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
-        }
+    .btn-analyze {
+      background-color: #ff6f00;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s ease, background-color 0.3s;
+    }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
+    .btn-analyze:hover {
+      background-color: #ffaa00;
+      transform: scale(1.05);
+    }
 
-        button:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
 
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #4CAF50;
-            border-radius: 8px;
-            background-color: #e8f5e9;
-            animation: slideIn 1s ease-in-out;
-        }
+    .modal-content {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: #e0e0e0;
+      position: relative;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+      animation: scaleUp 0.5s ease-out;
+    }
 
-        .result p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #ff6f00;
+      cursor: pointer;
+    }
+    .sidebar ul li i {
+      margin-right: 10px; /* Space between icon and text */
+    }
 
-        .result h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
-            color: #4CAF50;
-        }
+    .modal-content h3 {
+      margin-top: 0;
+    }
 
-        .info-text {
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-                margin-top: 120px;
-            }
-
-            button {
-                padding: 10px;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
+    .emoji {
+      font-size: 40px;
+      margin: 15px 0;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Movie Review Sentiment Analysis</h1>
-    </header>
 
-    <div class="container">
-        <h2>Enter a Movie Review</h2>
-
-        <form method="POST">
-            {% csrf_token %}
-            <textarea name="review" rows="5" placeholder="Type your review here...">{{ review }}</textarea><br>
-            <button type="submit">Submit</button>
-        </form>
-
-        <p class="info-text">Get instant analysis of your movie review with confidence levels.</p>
-
-        <!-- Display the sentiment result after the form submission -->
-        {% if sentiment %}
-            <div class="result">
-                <h3>Sentiment Analysis Result</h3>
-                <!-- Display emoji based on sentiment -->
-                {% if sentiment == 'Positive' %}
-                    <div class="emoji">😊</div>
-                {% else %}
-                    <div class="emoji">😡</div>
-                {% endif %}
-                <p><strong>Review:</strong> {{ review }}</p>
-                <p><strong>Sentiment:</strong> {{ sentiment }}</p>
-                <p><strong>Confidence Level:</strong> {{ confidence_level }}%</p>
-            </div>
-        {% endif %}
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Navigation</h3>
+      <ul>
+        <li onclick="loadContent('home')">🏠Home</li>
+        <li onclick="loadContent('analyze')">🔍Analyze Review</li>
+        <li onclick="loadContent('saved')">📁Saved Results</li>
+        <li onclick="loadContent('settings')">⚙️Settings</li>
+        <li onclick="loadContent('help')">❓Help</li>
+      </ul>
     </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content">
+      <h1>Welcome to the Sentiment Analysis Interface</h1>
+      <p>Use the sidebar to navigate different features of the application.</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="sentimentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div id="modalEmoji" class="emoji"></div>
+      <h3 id="modalMessage"></h3>
+      <p id="modalConfidence"></p>
+    </div>
+  </div>
+
+  <!-- JavaScript for Navigation and Analysis -->
+  <script>
+    function loadContent(section) {
+      const mainContent = document.getElementById("main-content");
+
+      switch(section) {
+        case 'home':
+          mainContent.innerHTML = `
+            <h1>Welcome to the Sentiment Analysis Interface</h1>
+            <p>Use the sidebar to navigate different features of the application.</p>
+          `;
+          break;
+        case 'analyze':
+          mainContent.innerHTML = `
+            <h1>Analyze Review</h1>
+            <div class="input-section">
+              <textarea id="reviewInput" rows="5" placeholder="Write your review here..."></textarea>
+              <button class="btn-analyze" onclick="analyzeSentiment()">Analyze Sentiment</button>
+            </div>
+          `;
+          break;
+        case 'saved':
+          mainContent.innerHTML = `
+            <h1>Saved Results</h1>
+            <p>No saved results yet. Analyze a review to save its sentiment results.</p>
+          `;
+          break;
+        case 'settings':
+          mainContent.innerHTML = `
+            <h1>Settings</h1>
+            <p>Customize your preferences here. (Feature coming soon!)</p>
+          `;
+          break;
+        case 'help':
+          mainContent.innerHTML = `
+            <h1>Help</h1>
+            <p>Need assistance? Here’s a quick guide on how to use this interface.</p>
+          `;
+          break;
+        default:
+          mainContent.innerHTML = `<h1>Welcome to the Sentiment Analysis Interface</h1>`;
+      }
+    }
+
+    function analyzeSentiment() {
+      const reviewInput = document.getElementById("reviewInput").value;
+      if (!reviewInput) {
+        alert("Please enter a review to analyze.");
+        return;
+      }
+      
+      // Mock analysis result
+      const sentiment = Math.random() > 0.5 ? 'Positive' : 'Negative'; 
+      const confidence = Math.floor(Math.random() * 100) + 1;
+
+      // Set modal content based on analysis result
+      const modalEmoji = document.getElementById("modalEmoji");
+      const modalMessage = document.getElementById("modalMessage");
+      const modalConfidence = document.getElementById("modalConfidence");
+
+      if (sentiment === 'Positive') {
+        modalEmoji.textContent = "😊";
+        modalMessage.textContent = "Positive Sentiment Detected!";
+      } else {
+        modalEmoji.textContent = "😡";
+        modalMessage.textContent = "Negative Sentiment Detected!";
+      }
+      modalConfidence.textContent = `Confidence Level: ${confidence}%`;
+
+      // Display the modal
+      document.getElementById("sentimentModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("sentimentModal").style.display = "none";
+    }
+  </script>
+
 </body>
 </html>
+
+
 
