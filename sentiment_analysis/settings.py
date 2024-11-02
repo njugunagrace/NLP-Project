@@ -42,8 +42,10 @@ INSTALLED_APPS = [
 ]
 
 STATIC_URL = '/static/'
+
+# Remove STATICFILES_DIRS if you're relying on app-level static directories
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'reviews', 'static'), 
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
